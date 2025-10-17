@@ -1,16 +1,11 @@
 <?php
-// delete_note.php
 include_once 'config.php';
-
-// Get posted data
 $data = json_decode(file_get_contents("php://input"));
 
 if(!empty($data->id)) {
     try {
         $database = new Database();
         $db = $database->getConnection();
-        
-        // Soft delete (set is_active to 0)
         $query = "UPDATE notes SET is_active = 0 WHERE id = :id";
         $stmt = $db->prepare($query);
         
@@ -52,4 +47,5 @@ if(!empty($data->id)) {
         "message" => "Note ID is required"
     ));
 }
+
 ?>
