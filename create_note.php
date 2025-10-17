@@ -1,8 +1,5 @@
 <?php
-// create_note.php
 include_once 'config.php';
-
-// Get posted data
 $data = json_decode(file_get_contents("php://input"));
 
 if(!empty($data->content)) {
@@ -12,14 +9,11 @@ if(!empty($data->content)) {
         
         $query = "INSERT INTO notes (content) VALUES (:content)";
         $stmt = $db->prepare($query);
-        
-        // Sanitize input
         $content = htmlspecialchars(strip_tags($data->content));
         
         $stmt->bindParam(":content", $content);
         
         if($stmt->execute()) {
-            // Get the newly created note
             $lastId = $db->lastInsertId();
             $query = "SELECT id, content, timestamp FROM notes WHERE id = ?";
             $stmt = $db->prepare($query);
@@ -41,7 +35,6 @@ if(!empty($data->content)) {
                 "message" => "Unable to create note"
             ));
         }
-        
     } catch(PDOException $exception) {
         http_response_code(500);
         echo json_encode(array(
